@@ -1,4 +1,4 @@
-setwd("H:/TRB/AAP Submission/") # Change this to your working directory containing the competition data
+setwd("C:/Users/jeff.keller/Desktop/RFDilemmaZone") # Change this to your working directory containing the competition data
 library(randomForest)
 library(ggplot2)
 library(reshape2)
