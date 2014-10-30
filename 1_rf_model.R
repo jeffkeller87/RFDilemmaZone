@@ -1,4 +1,8 @@
-setwd("C:/Users/jeff.keller/Desktop/RFDilemmaZone") # Change this to your working directory containing the competition data
+# Change this to your working directory containing the competition data
+setwd("C:/Users/jeff.keller/Desktop/RFDilemmaZone")
+
+# packages needed (run the line below to install)
+# install.packages(c("randomForest", "ggplot2", "reshape2", "scales"))
 library(randomForest)
 library(ggplot2)
 library(reshape2)
@@ -79,7 +83,9 @@ table(y, y_hat) # 0%! (Over-fitting)
 # Variable Importance (Figure 2)
 varImpPlot(rf.all)
 
-# A single new record (a "median" record)
+
+### Sensitivity analysis (Table 2)
+# A single baseline record (a "median" record)
 newentry <- list()
 newentry$Event1.Vel <- 40
 newentry$Event1.Dist <- 200
@@ -203,15 +209,3 @@ p_hat <- y_hat[,2]
 n <- rf.all$ntree
 moe <- sqrt(p_hat * (1 - p_hat) / n) * qnorm(1 - alpha / 2)
 moe
-
-
-### Basic Binary Logit (No Interactions)
-bin_logit <- glm(formula = outcome ~ Event1.Vel + Event1.Dist +
-                   Event2.Vel + Age + Device + Treatment + Gender + Accel.Min + Accel.Max,
-                 family = "binomial", data = data)
-
-y <- bin_logit$y
-y_hat <- round(bin_logit$fitted.values)
-
-# The Binary Logit Model simply predicts all observations to be "safe" (a value of zero here)
-table(y, y_hat)

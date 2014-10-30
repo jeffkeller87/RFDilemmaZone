@@ -1,10 +1,9 @@
-setwd("H:/TRB/AAP Submission") # Change this to your working directory containing the competition data
-
+# Change this to your working directory containing the competition data
+setwd("C:/Users/jeff.keller/Desktop/RFDilemmaZone")
 
 # Read in the data
 data.raw <- read.table("WUA_yldata_for TRB contest Oct 13 2013.csv", sep=",", header = TRUE)
 head(data.raw)
-
 
 # Filter out the trial runs
 data <- data.raw[-grep(x = data.raw[, "Run.Name"], pattern = "FAMILIAR"), ]
@@ -58,7 +57,7 @@ data$treatment <- (data[, "treatment.order"] == "BIO" & data[, "Event.Id"] %in% 
                   (data[, "treatment.order"] == "OIB" & data[, "Event.Id"] %in% 306:311) * 2 +
                   (data[, "treatment.order"] == "OIB" & data[, "Event.Id"] %in% 312:317) * 1
 
-#Remove a guy with a missing event id number
+#Remove one participant with a missing event id number
 data <- data[data[, "treatment"] %in% 1:3,]
 
 # Rename variables
@@ -125,14 +124,14 @@ data[, "Treatment.Order"] <- as.factor(data[, "Treatment.Order"])
 data[, "Treatment"] <- as.factor(data[, "Treatment"])
 levels(data[, "Treatment"]) <- c("B", "I", "O")
 
+# summarize each variable
 for (i in c(1:ncol(data))) {
   cat(names(data)[i], "\n\n")
   print(summary(data[,i]))
   cat("-------------------------------------------\n")
 }
 
-
-# set some clearly dirty data to missing
+# set some dirty data to missing
 data[, "Accel.Time"][data[, "Accel.Time"] == -1] <- NA
 data[, "Accel.Dir"][data[, "Accel.Dir"] == 0] <- NA
 data[, "Accel.Dir"] <- factor(data[, "Accel.Dir"])
@@ -141,7 +140,7 @@ data[, "Accel.Max"][data[, "Accel.Max"] == -1e+05] <- NA
 data[, "Stopline.Vel"][data[, "Stopline.Vel"] == -1e+05] <- NA
 data[, "Stopline.Time"][data[, "Stopline.Time"] == -1] <- NA
 
-# Exclude some missing data
+# Exclude observations missing critical values
 data <- data[!(data[, "Event1.Time"] == -1 | data[, "Event2.Time"] == -1), ]
 
 # Save the data set
